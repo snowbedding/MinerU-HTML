@@ -1,0 +1,10 @@
+
+readabilipy==0.3.0
+readability_lxml==0.8.4.1
+resiliparse==0.15.2
+justext==3.0.2
+gne==0.3.1
+goose3==3.1.20
+boilerpy3==1.0.7
+crawl4ai==0.7.7
+pip install https://github.com/opendatalab/magic-html/releases/download/magic_html-0.1.5-released/magic_html-0.1.2-py3-none-any.whl

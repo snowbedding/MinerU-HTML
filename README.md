@@ -2,6 +2,12 @@
 
 **MinerU-HTML(Dripper)** is an advanced HTML main content extraction tool based on Large Language Models (LLMs). It provides a complete pipeline for extracting primary content from HTML pages using LLM-based classification and state machine-guided generation.
 
+## News
+
+- 2025.12.1 🎉 The [AICC](https://huggingface.co/datasets/opendatalab/AICC) dataset is released, welcome to use! AICC dataset contains 7.3T web pages extracted and converted to Markdown format by MinerU-HTML(Dripper), with cleaner main content and high-quality code, formulas, and tables.
+- 2025.12.1 🎉 The [MinerU-HTML](https://huggingface.co/opendatalab/MinerU-HTML) model is released, welcome to use! MinerU-HTML model is a fine-tuned model on Qwen3, with better performance on HTML main content extraction.
+- 2025.12.1 🎉 The trial page is online, welcome to visit [Opendatalab-AICC](https://opendatalab.com/ai-ready/AICC#playground) to try our extraction tool!
+
 ## Features
 
 - 🚀 **LLM-Powered Extraction**: Uses state-of-the-art language models to intelligently identify main content
@@ -13,13 +19,14 @@
 - 🔧 **Multiple Extractors**: Supports various baseline extractors for comparison
 
 ## Evaluation Results
+
 We evaluated MinerU-HTML on the [WebMainBench](https://github.com/opendatalab/WebMainBench/) benchmark, which contains 7,887 meticulously annotated web pages along with their corresponding Markdown-formatted main content converted using `html2text`. This benchmark measures the extraction accuracy of content extractors by computing ROUGE-N scores between the extracted results and ground-truth content. The primary evaluation results are presented in the table below:
 
 | Extractor                | ROUGE-N.f1 |
-|--------------------------|------------|
+| ------------------------ | ---------- |
 | MinerU-HTML              | 0.8399     |
-| GPT-5*                   | 0.8302     |
-| DeepSeek-V3*             | 0.8252     |
+| GPT-5\*                  | 0.8302     |
+| DeepSeek-V3\*            | 0.8252     |
 | MinerU-HTML(no fallback) | 0.8182     |
 | Magic-HTML               | 0.7091     |
 | Readability              | 0.6491     |
@@ -35,8 +42,6 @@ We evaluated MinerU-HTML on the [WebMainBench](https://github.com/opendatalab/We
 | ReaderLM-v2              | 0.2264     |
 
 where * denotes that use GPT-5/Deepseek-V3 to extract the main html in MinerU-HTML framework instead of our finetuned model.
-
-
 
 ## Installation
 
@@ -206,14 +211,23 @@ Dripper supports various baseline extractors for comparison:
 - [**Dripper**](https://opendatalab.com/ai-ready/AICC#playground) (`dripper-md`, `dripper-html`): The main LLM-based extractor
 
 - [**Magic-HTML**](https://github.com/opendatalab/magic-html): CPU only HTML extraction tool, also from **OpenDatalab**
+
 - [**Trafilatura**](https://github.com/adbar/trafilatura): Fast and accurate content extraction
+
 - [**Readability**](https://github.com/mozilla/readability): Mozilla's readability algorithm
+
 - [**BoilerPy3**](https://github.com/jmriebold/BoilerPy3): Python port of Boilerpipe
+
 - [**NewsPlease**](https://github.com/fhamborg/news-please): News article extractor
+
 - [**Goose3**](https://github.com/goose3/goose3): Article extractor
+
 - [**GNE**](https://github.com/GeneralNewsExtractor/GeneralNewsExtractor): General News Extractor
+
 - [**ReaderLM**](https://huggingface.co/jinaai/ReaderLM-v2): LLM-based text extractor
+
 - [**Crawl4ai**](https://github.com/unclecode/crawl4ai): AI-powered web content extraction
+
 - And more...
 
 ## License
@@ -229,6 +243,36 @@ For more information, please see the [NOTICE](NOTICE) file.
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Citation
+
+If you use this project in your research, please cite:
+
+```bibtex
+@misc{liu2025drippertokenefficientmainhtml,
+      title={Dripper: Token-Efficient Main HTML Extraction with a Lightweight LM},
+      author={Mengjie Liu and Jiahui Peng and Pei Chu and Jiantao Qiu and Ren Ma and He Zhu and Rui Min and Lindong Lu and Wenchang Ning and Linfeng Hou and Kaiwen Liu and Yuan Qu and Zhenxiang Li and Chao Xu and Zhongying Tu and Wentao Zhang and Conghui He},
+      year={2025},
+      eprint={2511.23119},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2511.23119},
+}
+```
+
+If you use the extracted [AICC](https://huggingface.co/datasets/opendatalab/AICC) dataset, please cite:
+
+```bibtex
+@misc{ma2025aiccparsehtmlfiner,
+      title={AICC: Parse HTML Finer, Make Models Better -- A 7.3T AI-Ready Corpus Built by a Model-Based HTML Parser},
+      author={Ren Ma and Jiantao Qiu and Chao Xu and Pei Chu and Kaiwen Liu and Pengli Ren and Yuan Qu and Jiahui Peng and Linfeng Hou and Mengjie Liu and Lindong Lu and Wenchang Ning and Jia Yu and Rui Min and Jin Shi and Haojiong Chen and Peng Zhang and Wenjian Zhang and Qian Jiang and Zengjie Hu and Guoqiang Yang and Zhenxiang Li and Fukai Shang and Runyuan Ma and Chenlin Su and Zhongying Tu and Wentao Zhang and Dahua Lin and Conghui He},
+      year={2025},
+      eprint={2511.16397},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2511.16397},
+}
+```
 
 ## Acknowledgments
 

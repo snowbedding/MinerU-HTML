@@ -8,16 +8,17 @@ with optional state machine-based logits processing.
 import copy
 from typing import Union
 
-from vllm import LLM, SamplingParams
+from vllm import SamplingParams
 
 from dripper.base import (DripperGenerateInput, DripperGenerateOutput,
                           check_and_find_max_item_id)
 from dripper.exceptions import DripperTypeError
+from dripper.inference.imp import InferenceBackend
 from dripper.inference.logits import build_token_state_machine
 
 
 def generate(
-    llm: LLM,
+    llm: InferenceBackend,
     input: Union[DripperGenerateInput, list[DripperGenerateInput], str, list[str]],
     use_state_machine: str = 'v1',
 ) -> list[DripperGenerateOutput]:
@@ -28,7 +29,7 @@ def generate(
     to guide token generation for structured JSON output.
 
     Args:
-        llm: vLLM LLM instance for inference
+        llm: LLM instance for inference, should be a specific type in practical cases.
         input: Input data in various formats:
                - Single DripperGenerateInput
                - List of DripperGenerateInput
@@ -72,7 +73,6 @@ def generate(
 
     # Extract prompts from input data
     prompt_list = [data.full_prompt for data in input_list]
-
     # Base generation configuration
     base_gen_config = SamplingParams(
         top_k=1, top_p=0.95, temperature=0, max_tokens=8 * 1024
@@ -99,9 +99,8 @@ def generate(
         # If use_state_machine is None or empty string
         # Use base_gen_config without logits processors
         sampling_params_arg = base_gen_config
-
     # Perform batch generation
-    res_list = llm.generate(prompt_list, sampling_params=sampling_params_arg)
+    res_list = llm.generate(prompt_list)
 
     # Convert results to DripperGenerateOutput objects
     output_list = []

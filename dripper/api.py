@@ -10,7 +10,6 @@ import os
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 from transformers import AutoTokenizer
-from vllm import LLM
 
 from dripper.base import (DripperGenerateInput, DripperGenerateOutput,
                           DripperInput, DripperOutput, DripperProcessData,
@@ -19,6 +18,7 @@ from dripper.exceptions import (DripperConfigError, DripperEnvError,
                                 DripperLoadModelError, DripperPostprocessError,
                                 DripperPreprocessError,
                                 DripperResponseParseError, DripperTypeError)
+from dripper.inference.imp import InferenceBackend, VLLMInferenceBackend
 from dripper.inference.inference import generate
 from dripper.inference.logits import parse_llm_response
 from dripper.inference.prompt import get_full_prompt
@@ -69,6 +69,7 @@ class Dripper:
         raise_errors (bool): Whether to raise exceptions on errors
         use_fall_back (bool): Whether to use fallback extraction method
         state_machine (str): State machine version for logits processing
+        inference_backend (str): The inference backend you want to use. The default is vllm.
     """
 
     def __init__(self, config: Dict[str, Any]) -> None:
@@ -90,9 +91,10 @@ class Dripper:
         self.use_fall_back = config.get('use_fall_back', True)
         self.state_machine = config.get('state_machine', None)
         self.early_load = config.get('early_load', False)
+        self.inference_backend = config.get('inference_backend', 'vllm')
 
         # Lazy-loaded attributes (initialized on first use)
-        self._llm: Optional[LLM] = None
+        self._llm: Optional[InferenceBackend] = None
         self._tokenizer: Optional[AutoTokenizer] = None
         self._trafilatura_settings = None
         self._trafilatura = None
@@ -190,12 +192,12 @@ class Dripper:
                 ) from e
         return self._tokenizer
 
-    def get_llm(self) -> LLM:
+    def get_llm(self) -> InferenceBackend:
         """
         Get LLM instance (lazy-loaded).
 
         Returns:
-            VLLM LLM instance
+            InferenceBackend instance, the specific type depends on `inference_backend` in init config.
 
         Raises:
             DripperLoadModelError: When model loading fails
@@ -204,9 +206,14 @@ class Dripper:
             check_vllm_environment(self.state_machine)
             try:
                 logger.info(f'Loading model: {self.model_path}')
-                self._llm = LLM(
-                    model=self.model_path, tensor_parallel_size=self.tp
-                )
+                if self.inference_backend == 'vllm':
+                    self._llm = VLLMInferenceBackend(
+                        model_path=self.model_path, tensor_parallel_size=self.tp,
+                    )
+                else:
+                    raise DripperConfigError(
+                        f'Unsupported inference backend: {self.inference_backend}'
+                    )
                 logger.info('Model loading completed')
             except Exception as e:
                 raise DripperLoadModelError(
